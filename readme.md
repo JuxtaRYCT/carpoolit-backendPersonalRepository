@@ -7,8 +7,8 @@ Built in Go using the Fiber Framework.
 ## Setup
 
 ```
-$ git clone [repository url]
-$ cd [repository name]
+$ git clone https://github.com/ACM-VIT/carpoolit-backend.git
+$ cd carpoolit-backend
 $ go run main.go
 ```
 
