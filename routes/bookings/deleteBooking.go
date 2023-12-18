@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// DEETE /bookings/:id
+// DELETE /bookings/:id
 // DeleteBooking handles the deletion of a booking
 // Accepts a booking id as a url parameter
 // Returns a status code and a message
