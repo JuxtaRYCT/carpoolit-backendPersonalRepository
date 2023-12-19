@@ -5,6 +5,7 @@ import (
 	"carpool-backend/models"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,7 +15,7 @@ import (
 // Accepts a booking id as a url parameter
 // Returns a status code and a message
 func DeleteBooking(c *fiber.Ctx) error {
-	bookingId, err := c.ParamsInt("id")
+	bookingId, err := strconv.Atoi(c.Params("id"))
 
 	if err != nil {
 		log.Printf("Error converting booking id to int: %v\n", err)
