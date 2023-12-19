@@ -2,7 +2,7 @@ package main
 
 import (
 	"carpool-backend/database"
-	routes "carpool-backend/routes/rides"
+	"carpool-backend/routes/rides"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,5 +20,5 @@ func main() {
 }
 
 func setUpRoutes(app *fiber.App) {
-	app.Put("/api/ride/:id", routes.UpdateRide)
+	app.Put("/api/ride/:id", rides.UpdateRide)
 }
