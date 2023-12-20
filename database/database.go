@@ -2,11 +2,12 @@ package database
 
 import (
 	"carpool-backend/models"
+	"log"
+	"os"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
 // DbInstance is a representation of the database instance - its only field is the gorm DB instance
