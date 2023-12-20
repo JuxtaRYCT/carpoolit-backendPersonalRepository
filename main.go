@@ -2,6 +2,7 @@ package main
 
 import (
 	"carpool-backend/database"
+	"carpool-backend/routes/ride"
 
 	"carpool-backend/routes/bookings"
 	"carpool-backend/routes/rides"
@@ -13,10 +14,6 @@ import (
 
 func SetupRoutes(app *fiber.App) {
 	// booking routes
-	app.Delete("/bookings/:id", bookings.DeleteBooking)
-	app.Post("/bookings", bookings.CreateBooking)
-	app.Put("/api/rides/:id", rides.UpdateRide)
-	app.Put("/bookings/:id", bookings.EditBooking)
 }
 
 func main() {
