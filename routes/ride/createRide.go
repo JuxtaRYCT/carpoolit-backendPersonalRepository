@@ -30,7 +30,7 @@ func CreateRide(c *fiber.Ctx) error {
 	var ride models.Ride
 
 	//REQUEST VALIDATION
-	//Logs a 400 error if the request method is not POST
+	//Logs a 405 error if the request method is not POST
 	if c.Method() != "POST" {
 		log.Printf("Request method is not POST\n")
 		return c.Status(405).SendString("Request method is not POST")
