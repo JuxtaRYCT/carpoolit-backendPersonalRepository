@@ -11,6 +11,8 @@ import (
 func SetupRoutes(app *fiber.App) {
 	// booking routes
 	app.Delete("/bookings/:id", bookings.DeleteBooking)
+	app.Post("/bookings", bookings.CreateBooking)
+
 }
 
 func main() {
