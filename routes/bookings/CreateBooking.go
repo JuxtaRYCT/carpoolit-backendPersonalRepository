@@ -32,8 +32,9 @@ func CreateBooking(c *fiber.Ctx) error {
 		log.Println("Similar booking already exists")
 		return c.Status(400).SendString("Similar booking already exists")
 	}
-	ride := models.Ride{}
-	if err := database.Database.Db.Where("id = ?", Booking.RideID).First(&ride).Error; err != nil {
+	var ride models.Ride
+	// Fetch the ride by ID
+	if err := database.Database.Db.First(&ride, Booking.RideID).Error; err != nil {
 		log.Printf("Error finding ride: %v\n", err)
 		return c.Status(404).SendString("Ride not found")
 	}
@@ -44,16 +45,12 @@ func CreateBooking(c *fiber.Ctx) error {
 		return c.Status(400).SendString("No available seats for this ride")
 	}
 
-	// Update the booked seats count
-	ride.BookedSeats++
-	if err := database.Database.Db.Save(&ride).Error; err != nil {
+	// Increment the booked seats count
+	if err := database.Database.Db.Model(&ride).Update("booked_seats", ride.BookedSeats+1).Error; err != nil {
 		log.Printf("Error updating booked seats for ride: %v\n", err)
 		return c.Status(500).SendString("Error updating booked seats for ride")
 	}
 
-	// Log the updated booked seats for the ride
-	log.Printf("Booked seats for ride with id %v incremented to %v\n", ride.ID, ride.BookedSeats)
-	// Insert the booking into the database
 	result := database.Database.Db.Create(&Booking)
 	if result.Error != nil {
 		log.Printf("Error creating booking: %v\n", result.Error)
