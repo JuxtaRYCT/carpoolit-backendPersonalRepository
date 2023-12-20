@@ -8,6 +8,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // CreateRide handles the creation of a ride in the database
@@ -32,7 +33,7 @@ func CreateRide(c *fiber.Ctx) error {
 	//Logs a 400 error if the request method is not POST
 	if c.Method() != "POST" {
 		log.Printf("Request method is not POST\n")
-		return c.Status(400).SendString("Request method is not POST")
+		return c.Status(405).SendString("Request method is not POST")
 	}
 
 	//Logs a 400 error if the JSON request is invalid
@@ -51,15 +52,14 @@ func CreateRide(c *fiber.Ctx) error {
 
 	//DATA VALIDATION
 	//Checks if the host user ID exists
-	var hostUser []models.User
-	result := database.Database.Db.Where("id = ?", ride.HostUserID).Find(&hostUser)
-	if result.Error != nil {
+	var hostUser models.User
+	result := database.Database.Db.First(&hostUser, ride.HostUserID)
+	if result.Error == gorm.ErrRecordNotFound {
+		log.Printf("Host user ID does not exist")
+		return c.Status(400).SendString("Host user ID does not exist")
+	} else if result.Error != nil {
 		log.Printf("Error finding host user: %v\n", result.Error)
 		return c.Status(502).SendString("Error finding host user")
-	}
-	if len(hostUser) == 0 {
-		log.Printf("Host user does not exist")
-		return c.Status(400).SendString("Host user does not exist")
 	}
 
 	//Checks if start time is in the future
@@ -69,20 +69,20 @@ func CreateRide(c *fiber.Ctx) error {
 	}
 
 	//Checks if the host user has enough seats
-	if ride.TotalSeats < ride.BookedSeats {
-		log.Printf("Total seats available is less than booked seats")
-		return c.Status(400).SendString("Total seats available is less than booked seats")
+	if ride.TotalSeats <= ride.BookedSeats {
+		log.Printf("Total seats available should be more than booked seats")
+		return c.Status(400).SendString("Total seats available should be more than booked seats")
 	}
 
 	//Obtaining the user from the db using the host user ID
-	ride.HostUser = hostUser[0]
+	ride.HostUser = hostUser
 
 	//CREATING THE RIDE
 	result = database.Database.Db.Create(&ride)
 
 	if result.Error != nil {
 		log.Printf("Error creating ride: %v\n", result.Error)
-		return c.Status(502).SendString("Error creating ride")
+		return c.Status(500).SendString("Error creating ride")
 	}
 
 	log.Printf("Ride with id %v created\n", ride.ID)
