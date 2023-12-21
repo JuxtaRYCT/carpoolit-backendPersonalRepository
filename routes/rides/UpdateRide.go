@@ -50,6 +50,6 @@ func UpdateRide(c *fiber.Ctx) error {
 	}
 
 	// Log success and return the updated ride as JSON.
-	log.Printf("Ride with ID %v has been updated", updatedRide.ID)
-	return c.Status(200).JSON(updatedRide)
+	log.Printf("Ride with ID %v successfully updated\n", updatedRide.ID)
+	return c.Status(200).JSON(helpers.CreateResponseRide(updatedRide))
 }

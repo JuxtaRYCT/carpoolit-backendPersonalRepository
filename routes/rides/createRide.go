@@ -1,7 +1,8 @@
-package routes
+package rides
 
 import (
 	"carpool-backend/database"
+	"carpool-backend/helpers"
 	"carpool-backend/models"
 	"log"
 	"time"
@@ -86,5 +87,5 @@ func CreateRide(c *fiber.Ctx) error {
 	}
 
 	log.Printf("Ride with id %v created\n", ride.ID)
-	return c.Status(200).JSON(ride)
+	return c.Status(200).JSON(helpers.CreateResponseRide(ride))
 }

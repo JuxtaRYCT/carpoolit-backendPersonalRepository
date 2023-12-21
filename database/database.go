@@ -32,13 +32,43 @@ func ConnectToDB() {
 
 	log.Println("Connecting to database...")
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
-	db.Scopes(GlobalActivationScope)
 
 	if err != nil {
 		log.Fatal("Error connecting to database")
 	}
 
+	db.Scopes(GlobalActivationScope)
+
 	log.Println("Connected to database")
+
+	// Create triggers and indexes
+	//const triggerQuery = `
+	//	CREATE OR REPLACE FUNCTION ride_search_vector_update() RETURNS trigger AS $$
+	//	BEGIN
+	//	NEW.search_vector := to_tsvector('english', coalesce(NEW.start_location, '') || ' ' || coalesce(NEW.end_location, ''));
+	//	RETURN NEW;
+	//	END
+	//	$$ LANGUAGE plpgsql;
+	//
+	//	DROP TRIGGER IF EXISTS ride_search_vector_trigger ON rides;
+	//	CREATE TRIGGER ride_search_vector_trigger
+	//	BEFORE INSERT OR UPDATE ON rides
+	//	FOR EACH ROW EXECUTE FUNCTION ride_search_vector_update();
+	//	`
+	//
+	//log.Println("Creating triggers...")
+	//if result := db.Exec(triggerQuery); result.Error != nil {
+	//	log.Println("Error creating triggers")
+	//}
+	//log.Println("Triggers created")
+	//
+	//const indexQuery = `CREATE INDEX IF NOT EXISTS ride_search_idx ON rides USING GIN(search_vector);`
+	//
+	//log.Println("Creating index...")
+	//if result := db.Exec(indexQuery); result.Error != nil {
+	//	log.Println("Error creating index")
+	//}
+	//log.Println("Index created")
 
 	if os.Getenv("SHOULD_MIGRATE") == "TRUE" {
 		log.Println("Running DB Migrations...")
@@ -46,7 +76,7 @@ func ConnectToDB() {
 		err = db.AutoMigrate(&models.User{}, &models.Ride{}, &models.Booking{})
 
 		if err != nil {
-			log.Println("Error running DB Migrations")
+			log.Fatalf("Error running migrations: %v", err)
 		}
 
 		log.Println("DB Migrations completed")

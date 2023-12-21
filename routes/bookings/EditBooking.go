@@ -41,5 +41,5 @@ func EditBooking(c *fiber.Ctx) error {
 
 	// Log success and return the updated booking as JSON.
 	log.Printf("Booking with ID %v has been updated", booking.ID)
-	return c.Status(200).JSON(booking)
+	return c.Status(200).JSON(helpers.CreateResponseBooking(booking))
 }
