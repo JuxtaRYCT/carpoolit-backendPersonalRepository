@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetRides handles fetching all rides from the database
+// GetRides handles fetching all rides from the database which are not full and are yet to start
 // Returns an HTTP status code and a message indicating the result of the operation
 //
 // Parameters:
@@ -22,7 +22,7 @@ import (
 func GetRides(c *fiber.Ctx) error {
 	var rides []models.Ride
 
-	result := database.Database.Db.Find(&rides)
+	result := database.Database.Db.Where("booked_seats < total_seats AND start_time > NOW()").Find(&rides)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		log.Printf("No rides found\n")

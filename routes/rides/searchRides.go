@@ -20,8 +20,10 @@ import (
 
 func SearchRides(c *fiber.Ctx) error {
 
-	startLocation := c.Query("startLocation")
-	endLocation := c.Query("endLocation")
+	const similarityThreshold = 0.4
+
+	startLocation := c.Query("start_location")
+	endLocation := c.Query("end_location")
 	date := c.Query("date")
 	//date in format DD-MM-YYYY
 
@@ -29,18 +31,37 @@ func SearchRides(c *fiber.Ctx) error {
 
 	tx := database.Database.Db.Model(&models.Ride{})
 
+	// First remove all rides that are full or have already started
+
+	tx = tx.Where("booked_seats < total_seats AND start_time > NOW()")
+
+	// Filtering by start location
 	if startLocation != "" {
-		tx = tx.Where("start_location ILIKE ?", "%"+startLocation+"%")
+		tx = tx.Where("start_location ILIKE ? OR similarity(start_location, ?) > ?", "%"+startLocation+"%", startLocation, similarityThreshold)
 	}
 
+	// Filtering by end location
 	if endLocation != "" {
-		tx = tx.Where("end_location ILIKE ?", "%"+endLocation+"%")
+		tx = tx.Where("end_location ILIKE ? OR similarity(end_location, ?) > ?", "%"+endLocation+"%", endLocation, similarityThreshold)
 	}
 
+	// Filtering by date
 	if date != "" {
 		inputDate, err := time.Parse("02-01-2006", date)
-		location := time.Now().Location()
-		inputDate = inputDate.In(location)
+
+		if err != nil {
+			log.Printf("Error parsing date: %v\n", err)
+			return c.Status(400).SendString("Error parsing date")
+		}
+
+		timeLoc, err := time.LoadLocation("Asia/Calcutta")
+
+		if err != nil {
+			log.Printf("Error parsing date: %v\n", err)
+			return c.Status(400).SendString("Error setting timezone")
+		}
+
+		inputDate = inputDate.In(timeLoc)
 		log.Printf("Date: %v\n", inputDate)
 		if err != nil {
 			return c.Status(400).SendString("Error parsing date")
