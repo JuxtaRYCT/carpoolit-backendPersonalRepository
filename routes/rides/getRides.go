@@ -11,6 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: Implement Pagination [Good to have]
+
 // GetRides handles fetching all rides from the database which are not full and are yet to start
 // Returns an HTTP status code and a message indicating the result of the operation
 //

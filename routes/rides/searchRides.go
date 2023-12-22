@@ -17,6 +17,7 @@ import (
 // Exact matches for filtered fields
 // Filters available: Date, Start Location, End Location
 // TODO: Radial search for location, find a geocoding API to use
+// TODO: Implement a time range filter [Good to have]
 
 func SearchRides(c *fiber.Ctx) error {
 
@@ -54,14 +55,20 @@ func SearchRides(c *fiber.Ctx) error {
 			return c.Status(400).SendString("Error parsing date")
 		}
 
-		timeLoc, err := time.LoadLocation("Asia/Calcutta")
+		// timeLoc, err := time.LoadLocation("Asia/Calcutta")
 
-		if err != nil {
-			log.Printf("Error parsing date: %v\n", err)
-			return c.Status(400).SendString("Error setting timezone")
-		}
+		// if err != nil {
+		// 	log.Printf("Error parsing date: %v\n", err)
+		// 	return c.Status(400).SendString("Error setting timezone")
+		// }
 
-		inputDate = inputDate.In(timeLoc)
+		// inputDate = inputDate.In(timeLoc)
+
+		// NOTE: All times are stored in UTC in the database
+		// When a ride will be created / searched, the time will be converted to UTC first
+		// This conversion will be done on the client side
+		// There is some issue with setting the timezones in the deployment environment
+
 		log.Printf("Date: %v\n", inputDate)
 		if err != nil {
 			return c.Status(400).SendString("Error parsing date")
