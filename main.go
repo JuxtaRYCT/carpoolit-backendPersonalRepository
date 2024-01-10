@@ -4,6 +4,7 @@ import (
 	"carpool-backend/database"
 	"carpool-backend/routes/bookings"
 	"carpool-backend/routes/rides"
+	"carpool-backend/routes/users"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,6 +23,9 @@ func SetupRoutes(app *fiber.App) {
 	app.Get("/rides", rides.GetRides)
 	app.Get("/search", rides.SearchRides)
 	app.Get("/rides/:id", rides.GetRidesById)
+
+	// user routes
+	app.Post("/users", users.UpdateUser)
 }
 
 func main() {
