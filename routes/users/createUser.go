@@ -41,5 +41,5 @@ func CreateUser(c *fiber.Ctx) error {
 
 	// Log success and return the updated user as JSON.
 	log.Printf("User successfully created\n")
-	return c.Status(200).JSON(createUser)
+	return c.Status(200).JSON(helpers.CreateResponseUser(createUser))
 }

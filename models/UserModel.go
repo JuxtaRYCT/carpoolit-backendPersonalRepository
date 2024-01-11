@@ -14,3 +14,12 @@ type User struct {
 	Gender            string `gorm:"type:varchar(10)" json:"gender" valid:"in(male|female|other)~Gender must be male female or other"`
 	YOB               uint   `json:"yob" valid:"range(1900|2100)~Year of birth must be between 1900 and 2100"`
 }
+
+type UserResponse struct {
+	Name              string `json:"name"`
+	Email             string `json:"email"`
+	ProfilePictureURL string `json:"profile_picture_url"`
+	ContactNumber     string `json:"contact_number"`
+	Gender            string `json:"gender"`
+	YOB               uint   `json:"yob"`
+}
