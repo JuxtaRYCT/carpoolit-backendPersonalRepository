@@ -23,5 +23,4 @@ type UserResponse struct {
 	ContactNumber     string `json:"contact_number"`
 	Gender            string `json:"gender"`
 	YOB               uint   `json:"yob"`
-	Rides             []Ride `json:"rides"`
 }
