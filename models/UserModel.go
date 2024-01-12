@@ -33,3 +33,12 @@ type UserResponse struct {
 	Gender            string `json:"gender"`
 	YOB               uint   `json:"yob"`
 }
+
+type UserResponse struct {
+	Name              string `json:"name"`
+	Email             string `json:"email"`
+	ProfilePictureURL string `json:"profile_picture_url"`
+	ContactNumber     string `json:"contact_number"`
+	Gender            string `json:"gender"`
+	YOB               uint   `json:"yob"`
+}
