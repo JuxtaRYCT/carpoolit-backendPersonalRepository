@@ -19,13 +19,16 @@ func SetupRoutes(app *fiber.App) {
 	// ride routes
 	app.Post("/rides", rides.CreateRide)
 	app.Put("/rides", rides.UpdateRide)
+	app.Patch("/rideStatus", rides.UpdateRideStatus)
 	app.Delete("/rides", rides.DeleteRide)
 	app.Get("/rides", rides.GetRides)
 	app.Get("/search", rides.SearchRides)
 	app.Get("/rides/:id", rides.GetRidesById)
 
 	// user routes
+
 	app.Put("/users", users.UpdateUser)
+	app.Post("/users", users.CreateUser)
 }
 
 func main() {
