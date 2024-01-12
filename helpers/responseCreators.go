@@ -20,3 +20,14 @@ func CreateResponseBooking(booking models.Booking) models.BookingResponse {
 		PassengerID: booking.PassengerID,
 	}
 }
+
+func CreateResponseUser(user models.User) models.UserResponse {
+	return models.UserResponse{
+		Name:              user.Name,
+		Email:             user.Email,
+		ProfilePictureURL: user.ProfilePictureURL,
+		ContactNumber:     user.ContactNumber,
+		Gender:            user.Gender,
+		YOB:               user.YOB,
+	}
+}
