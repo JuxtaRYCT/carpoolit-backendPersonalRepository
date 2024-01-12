@@ -7,7 +7,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -21,11 +20,6 @@ import (
 //
 // Returns:
 //   - error: An error message indicating the result of the operation and an HTTP status code
-
-func ValidateRide(ride models.Ride) error {
-	_, err := govalidator.ValidateStruct(ride)
-	return err
-}
 
 func CreateRide(c *fiber.Ctx) error {
 	var ride models.Ride
@@ -45,7 +39,7 @@ func CreateRide(c *fiber.Ctx) error {
 	}
 
 	//Logs a 400 error if the Ride struct is invalid
-	err = ValidateRide(ride) // Validate the Ride struct
+	err = helpers.ValidateRide(ride) // Validate the Ride struct
 	if err != nil {
 		log.Printf("Error validating ride: %v\n", err)
 		return c.Status(400).SendString("Error validating ride")
