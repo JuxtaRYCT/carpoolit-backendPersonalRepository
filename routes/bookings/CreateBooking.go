@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func CreateBooking(c *fiber.Ctx) error {	
+func CreateBooking(c *fiber.Ctx) error {
 	var booking models.Booking
 
 	// Parse the request body into the Booking struct

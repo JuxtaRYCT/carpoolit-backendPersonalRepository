@@ -8,10 +8,10 @@ import (
 type Booking struct {
 	gorm.Model
 	RideID        uint   `gorm:"not null;uniqueIndex:idx_booking_ride_passenger" json:"ride_id" valid:"required~Ride ID is required"`
-	Ride          Ride   `gorm:"foreignKey:RideID;references:ID" json:"ride"`
+	Ride          Ride   `gorm:"foreignKey:RideID;references:ID" json:"ride" valid:"-"`
 	PassengerID   uint   `gorm:"not null;uniqueIndex:idx_booking_ride_passenger" json:"passenger_id" valid:"required~Passenger ID is required"`
-	Passenger     User   `gorm:"foreignKey:PassengerID;references:ID" json:"passenger"`
-	RequestStatus string `gorm:"type:varchar(10);not null" json:"request_status" valid:"in(accepted|pending|rejected)~Request Status is either accepted, pending or rejected,required~Status is Required"`
+	Passenger     User   `gorm:"foreignKey:PassengerID;references:ID" json:"passenger" valid:"-"`
+	RequestStatus string `gorm:"type:varchar(10);not null" json:"request_status" valid:"required~Status is required,in(pending|accepted|rejected)~Status must be accepted or pending or rejected"`
 }
 
 type BookingResponse struct {

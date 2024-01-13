@@ -25,10 +25,10 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	// checking if the email already exists in the database
-	if err := database.Database.Db.Where("email = ?", createUser.Email).First(&createUser).Error; err == nil {
-		log.Printf("Error creating user: Email %v already exists\n", createUser.Email)
-		return c.Status(400).SendString("Email already exists")
-	}
+	// if err := database.Database.Db.Where("email = ?", createUser.Email).First(&createUser).Error; err == nil {
+	// log.Printf("Error creating user: Email %v already exists\n", createUser.Email)
+	// return c.Status(400).SendString("Email already exists")
+	// }
 
 	// creates a new user in the database
 	result := database.Database.Db.Create(&createUser)
@@ -40,6 +40,6 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	// Log success and return the updated user as JSON.
-	log.Printf("User successfully created\n")
+	log.Printf("User successfully created. ID: %v\n", createUser.ID)
 	return c.Status(200).JSON(helpers.CreateResponseUser(createUser))
 }
