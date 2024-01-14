@@ -2,7 +2,6 @@ package users
 
 import (
 	"carpool-backend/database"
-	"carpool-backend/models"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,8 +9,6 @@ import (
 
 type RideResponse struct {
 	ID            uint   `json:"ID"`
-	CreatedAt     string `json:"CreatedAt"`
-	UpdatedAt     string `json:"UpdatedAt"`
 	HostUserID    uint   `json:"host_user_id"`
 	StartLocation string `json:"start_location"`
 	EndLocation   string `json:"end_location"`
@@ -25,44 +22,17 @@ type RideResponse struct {
 func GetUserRides(c *fiber.Ctx) error {
 	UserID := c.Params("userID")
 
-	var bookings []models.Booking
+	var ridesResponse []RideResponse
 
-	// Retrieve bookings made by the user
-	if err := database.Database.Db.Where("passenger_id = ?", UserID).Find(&bookings).Error; err != nil {
-		log.Printf("Error finding bookings: %v\n", err)
-		return c.Status(500).SendString("Error finding bookings")
-	}
-
-	// Extract unique ride IDs from bookings
-	rideIDs := make([]uint, len(bookings))
-	for i, booking := range bookings {
-		rideIDs[i] = booking.RideID
-	}
-
-	// Retrieve rides associated with the extracted ride IDs
-	var rides []models.Ride
-	if err := database.Database.Db.Where("id IN (?)", rideIDs).Find(&rides).Error; err != nil {
+	// Use GORM's Select to manually specify the fields for the response structure
+	if err := database.Database.Db.
+		Table("rides").
+		Select("rides.id, rides.host_user_id, rides.start_location, rides.end_location, rides.start_time, rides.total_seats, rides.booked_seats, rides.total_price, rides.ride_status").
+		Joins("JOIN bookings ON rides.id = bookings.ride_id").
+		Where("bookings.passenger_id = ?", UserID).
+		Scan(&ridesResponse).Error; err != nil {
 		log.Printf("Error finding rides: %v\n", err)
 		return c.Status(500).SendString("Error finding rides")
-	}
-
-	// Create the response
-	var ridesResponse []RideResponse
-	for _, ride := range rides {
-		rideResponse := RideResponse{
-			ID:            ride.ID,
-			CreatedAt:     ride.CreatedAt.String(),
-			UpdatedAt:     ride.UpdatedAt.String(),
-			HostUserID:    ride.HostUserID,
-			StartLocation: ride.StartLocation,
-			EndLocation:   ride.EndLocation,
-			StartTime:     ride.StartTime.String(),
-			TotalSeats:    ride.TotalSeats,
-			BookedSeats:   ride.BookedSeats,
-			TotalPrice:    ride.TotalPrice,
-			RideStatus:    ride.RideStatus,
-		}
-		ridesResponse = append(ridesResponse, rideResponse)
 	}
 
 	return c.Status(200).JSON(ridesResponse)
