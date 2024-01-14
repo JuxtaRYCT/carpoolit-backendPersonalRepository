@@ -42,22 +42,6 @@ func AcceptRoute(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error updating booked seats for ride")
 	}
 
-	var User models.User
-	UserID := booking.PassengerID
-
-	if err := database.Database.Db.First(&User, UserID).Error; err != nil {
-		log.Printf("User not Found")
-		return c.Status(404).SendString("User not Found")
-	}
-
-	// Append ride ID to user's past rides array
-	User.RidesID = append(User.RidesID, int64(ride.ID))
-
-	if err := database.Database.Db.Save(&User).Error; err != nil {
-		log.Printf("Error updating user's past rides: %v\n", err)
-		return c.Status(500).SendString("Error updating user's past rides")
-	}
-
 	return c.Status(200).JSON(helpers.CreateResponseBooking(booking))
 
 }

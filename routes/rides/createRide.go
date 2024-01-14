@@ -77,8 +77,8 @@ func CreateRide(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Error creating ride")
 	}
 
-	hostUser.RidesID = append(hostUser.RidesID, int64(ride.ID))
-	result = database.Database.Db.Save(&hostUser)
+	// hostUser.RidesID = append(hostUser.RidesID, int64(ride.ID))
+	// result = database.Database.Db.Save(&hostUser)
 
 	log.Printf("Ride with id %v created\n", ride.ID)
 	return c.Status(200).JSON(helpers.CreateResponseRide(ride))
