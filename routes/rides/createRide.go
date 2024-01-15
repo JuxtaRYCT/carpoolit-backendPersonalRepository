@@ -69,9 +69,6 @@ func CreateRide(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Total seats available should be more than booked seats")
 	}
 
-	//Obtaining the user from the db using the host user ID
-	ride.HostUser = hostUser
-
 	//CREATING THE RIDE
 	result = database.Database.Db.Create(&ride)
 
@@ -79,6 +76,9 @@ func CreateRide(c *fiber.Ctx) error {
 		log.Printf("Error creating ride: %v\n", result.Error)
 		return c.Status(500).SendString("Error creating ride")
 	}
+
+	// hostUser.RidesID = append(hostUser.RidesID, int64(ride.ID))
+	// result = database.Database.Db.Save(&hostUser)
 
 	log.Printf("Ride with id %v created\n", ride.ID)
 	return c.Status(200).JSON(helpers.CreateResponseRide(ride))

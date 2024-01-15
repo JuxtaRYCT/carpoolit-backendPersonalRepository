@@ -15,6 +15,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Post("/bookings", bookings.CreateBooking)
 	app.Put("/bookings", bookings.EditBooking)
 	app.Delete("/bookings", bookings.DeleteBooking)
+	app.Put("/bookings/accept/:bookingID", bookings.AcceptRoute)
 
 	// ride routes
 	app.Post("/rides", rides.CreateRide)
@@ -29,6 +30,8 @@ func SetupRoutes(app *fiber.App) {
 
 	app.Put("/users", users.UpdateUser)
 	app.Post("/users", users.CreateUser)
+	app.Get("/users/:id", users.GetUser)
+	app.Get("/users/:userID/rides", users.GetUserRides)
 }
 
 func main() {
