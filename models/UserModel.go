@@ -5,6 +5,7 @@ import (
 )
 
 // User is a representation of a user in the database
+
 type User struct {
 	gorm.Model
 	Name              string `gorm:"type:varchar(100);not null;" json:"name" valid:"required~Name is required,matches(^[a-zA-Z ]+$)~Name must be alphabetic"`
@@ -13,7 +14,6 @@ type User struct {
 	ContactNumber     string `gorm:"type:varchar(20);not null" json:"contact_number" valid:"required~Contact number is required,numeric~Contact number must be numeric"`
 	Gender            string `gorm:"type:varchar(10)" json:"gender" valid:"in(male|female|other)~Gender must be male female or other"`
 	YOB               uint   `json:"yob" valid:"range(1900|2100)~Year of birth must be between 1900 and 2100"`
-	Rides             []Ride `gorm:"foreignKey:HostUserID" json:"past_rides"`
 }
 
 type UserResponse struct {
