@@ -12,11 +12,6 @@ import (
 // Delete a user based on the id as a query line parameter (empty body)
 
 func DeleteUser(c *fiber.Ctx) error {
-	//Raise an error if wrong request type
-	if c.Method() != "DELETE" {
-		return c.Status(400).SendString("Invalid request type")
-	}
-
 	//Get the user id from the URL parameter
 	userId, err := strconv.Atoi(c.Params("id")) // Get the user id from the URL path and convert to integer
 
