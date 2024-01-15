@@ -30,6 +30,7 @@ func SetupRoutes(app *fiber.App) {
 
 	app.Put("/users", users.UpdateUser)
 	app.Post("/users", users.CreateUser)
+	app.Delete("/users/:id", users.DeleteUser)
 	app.Get("/users/:id", users.GetUser)
 	app.Get("/users/:userID/rides", users.GetUserRides)
 }
